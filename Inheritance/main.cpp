@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <string>
 using namespace std;
 
@@ -61,9 +61,9 @@ public:
 protected:
 	void print_year_suffix(unsigned int age)const
 	{
-		if (age%20>= 5 && age%20 <= 20 || age % 10 >= 5 || age % 10 == 0) cout << " ëåò" << endl;
-		else if (age % 10 > 1 && age % 10 < 5) cout << " ãîäà" << endl;
-		else cout << " ãîä" << endl;
+		if (age%20>= 5 && age%20 <= 20 || age % 10 >= 5 || age % 10 == 0) cout << " Ð»ÐµÑ‚" << endl;
+		else if (age % 10 > 1 && age % 10 < 5) cout << " Ð³Ð¾Ð´Ð°" << endl;
+		else cout << " Ð³Ð¾Ð´" << endl;
 	}
 
 };
@@ -120,7 +120,7 @@ public:
 	void print()const
 	{
 		Human::print();
-		cout << "Ñïåöèàëüíîñòü: " << speciality << ", ãðóïïà: " << group << ", óñïåâàåìîñòü: " << rating << endl;
+		cout << "Ð¡Ð¿ÐµÑ†Ð¸Ð°Ð»ÑŒÐ½Ð¾ÑÑ‚ÑŒ: " << speciality << ", Ð³Ñ€ÑƒÐ¿Ð¿Ð°: " << group << ", ÑƒÑÐ¿ÐµÐ²Ð°ÐµÐ¼Ð¾ÑÑ‚ÑŒ: " << rating << endl;
 	}
 };
 
@@ -166,7 +166,7 @@ public:
 	void print()const
 	{
 		Human::print();
-		cout << "Ñïåöèàëüíîñòü: " << speciality << ", îïûò ðàáîòû: " << exp ;
+		cout << "Ð¡Ð¿ÐµÑ†Ð¸Ð°Ð»ÑŒÐ½Ð¾ÑÑ‚ÑŒ: " << speciality << ", Ð¾Ð¿Ñ‹Ñ‚ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹: " << exp ;
 		print_year_suffix(exp);
 		cout << endl;
 	}
@@ -208,7 +208,7 @@ public:
 	void print()const
 	{
 		Student::print();
-		cout << "Òåìà äèïëîìíîãî ïðîåêòà: " << diploma_topic << endl;
+		cout << "Ð¢ÐµÐ¼Ð° Ð´Ð¸Ð¿Ð»Ð¾Ð¼Ð½Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾ÐµÐºÑ‚Ð°: " << diploma_topic << endl;
 	}
 };
 
@@ -220,26 +220,26 @@ int main()
 	setlocale(LC_ALL, "Russian");
 #ifdef INHERITANCE
 	cout << tab << "Inheritance" << endl;
-	Human vasya("Òóïåíêî", "Âàñèëèé", 20);
+	Human vasya("Ð¢ÑƒÐ¿ÐµÐ½ÐºÐ¾", "Ð’Ð°ÑÐ¸Ð»Ð¸Ð¹", 20);
 	vasya.print();
 	cout << delim << endl;
-	Student student("Èâàíîâ", "Ôåäîð", 25, "ÐÏÎ", "ÂÏÓ_011", 90);
+	Student student("Ð˜Ð²Ð°Ð½Ð¾Ð²", "Ð¤ÐµÐ´Ð¾Ñ€", 25, "Ð ÐŸÐž", "Ð’ÐŸÐ£_011", 90);
 	student.print();
 	cout << delim << endl;
 	Teacher teacher("Einstein", "Albert", 142, "Astronomy", 112);
 	teacher.print();
 	cout << delim << endl;
-	Graduate graduater("Ñèäðîâ", "Ôåäîð", 34, "ÐÏÎ", "ÂÏÓ_011", 90, "Îñâîåíèå ìàðñà");
+	Graduate graduater("Ð¡Ð¸Ð´Ñ€Ð¾Ð²", "Ð¤ÐµÐ´Ð¾Ñ€", 34, "Ð ÐŸÐž", "Ð’ÐŸÐ£_011", 90, "ÐžÑÐ²Ð¾ÐµÐ½Ð¸Ðµ Ð¼Ð°Ñ€ÑÐ°");
 	graduater.print();
 	cout << delim << endl;
 #endif // INHERITANCE
 #ifdef POLYMORPHISM
 	Human* group[] =
 	{
-		new Student("Ãàëëÿìóòäèíîâà", "Àëüáèíà" , 25, "ÐÏÎ" , "ÂÁÓ_011", 95),
-		new Graduate("Ðåìèçîâ", "Àëüáèíà" , 27, "ÐÏÎ" , "ÂÁÓ_011", 95, "Ôèã åãî çíàåò"),
+		new Student("Ð“Ð°Ð»Ð»ÑÐ¼ÑƒÑ‚Ð´Ð¸Ð½Ð¾Ð²Ð°", "ÐÐ»ÑŒÐ±Ð¸Ð½Ð°" , 25, "Ð ÐŸÐž" , "Ð’Ð‘Ð£_011", 95),
+		new Graduate("Ð ÐµÐ¼Ð¸Ð·Ð¾Ð²", "ÐÐ»ÑŒÐ±Ð¸Ð½Ð°" , 27, "Ð ÐŸÐž" , "Ð’Ð‘Ð£_011", 95, "Ð¤Ð¸Ð³ ÐµÐ³Ð¾ Ð·Ð½Ð°ÐµÑ‚"),
 		new Teacher("Eishtein","Albert",142,"Astronomy",112),
-		new Student("Ñîðîêèíà", "Ìàðèÿ" , 27, "ÐÏÎ" , "ÂÁÓ_011", 99)
+		new Student("Ð¡Ð¾Ñ€Ð¾ÐºÐ¸Ð½Ð°", "ÐœÐ°Ñ€Ð¸Ñ" , 27, "Ð ÐŸÐž" , "Ð’Ð‘Ð£_011", 99)
 	};
 
 	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
