@@ -9,6 +9,7 @@ class Employee
     string first_name;
     string job;
 public:
+    virtual double count_salary() = 0;
     const string& get_last_name() const
     {
         return last_name;
@@ -33,6 +34,7 @@ public:
     {
         this->job = job;
     }
+    
 
 
 
@@ -64,6 +66,7 @@ class Hourly : public Employee
     double salary;
     double work_hours;
 public:
+
     double get_salary() const
     {
         return salary;
@@ -105,7 +108,7 @@ public:
         cout << "Отработано " << work_hours << " часов" << endl;
     }
     
-    double count_salary(int salary, double work_hours) const
+    double count_salary() 
     {
         double total_salary;
         total_salary = get_salary() * get_hours();
@@ -153,7 +156,7 @@ class Monthly :public Employee
             cout << "Заработная плата " << salary << " руб. в месяц" << endl;
             cout << "Отработано дней: " << work_days << endl;
         }
-        double count_salary(int salary,double work_days)const
+        double count_salary()
         {
             return (get_salary() / 31) * get_days();
         }
@@ -161,6 +164,7 @@ class Monthly :public Employee
     };
 int main()
 {
+    double total_office_salary = 0;
     setlocale(LC_ALL, "");
     Employee* group[] =
     {
@@ -177,8 +181,10 @@ int main()
     } 
     for (int i = 0; i < sizeof(group) / sizeof(Employee*); i++)
     {
-        group[i];
-        cout << delim << endl;
+        double buffer=0;
+        buffer+=group[i]->count_salary();
+        total_office_salary += buffer;
     }
+        cout << "Общая зарплата офиса: "<< total_office_salary << " руб.!" << endl;
     
 }

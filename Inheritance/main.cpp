@@ -1,6 +1,9 @@
 ﻿#include <iostream>
 #include <string>
 using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
 
 #define delim "\n-----------------------------\n"
 #define tab "\t"
@@ -213,7 +216,7 @@ public:
 };
 
 //#define INHERITANCE
-#define POLYMORPHISM
+//#define POLYMORPHISM
 
 int main()
 {
@@ -248,6 +251,13 @@ int main()
 		cout << delim << endl;
 	}
 #endif // POLYMORPHISM
+
+	typedef double DataType;
+	DataType arr[] = { 2,3,5,8,13,21,34 };
+	for (int i = 0; i < sizeof(arr)/sizeof(DataType); i++)
+	{
+		cout << arr[i] << tab;
+	}
 
 	return 0; 
 }
