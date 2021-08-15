@@ -48,9 +48,8 @@ public:
 		set_age(age);
 		cout << "HConstructor:" << tab << this << endl;
 	}
-	~Human()
+	virtual ~Human()
 	{
-		cout << endl;
 		cout << "HDestructor:" <<tab<< this<< endl;	
 	}
 	//Methods
@@ -216,7 +215,8 @@ public:
 };
 
 //#define INHERITANCE
-//#define POLYMORPHISM
+#define POLYMORPHISM
+//#define FOR_SIZEOF
 
 int main()
 {
@@ -250,8 +250,12 @@ int main()
 		group[i]->print();
 		cout << delim << endl;
 	}
+	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
+	{
+		delete group[i];
+	}
 #endif // POLYMORPHISM
-
+#ifdef FOR_SIZEOF
 	typedef double DataType;
 	DataType arr[] = { 2,3,5,8,13,21,34 };
 	for (int i = 0; i < sizeof(arr)/sizeof(DataType); i++)
@@ -259,5 +263,7 @@ int main()
 		cout << arr[i] << tab;
 	}
 
-	return 0; 
+#endif // FOR_SIZEOF
+
+
 }
