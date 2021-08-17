@@ -88,7 +88,7 @@ namespace Geometry
 			SelectObject(hdc, hBrush);
 
 			//Рсиуем квадрат
-			::Rectangle(hdc, 300, 300, 300 + side, 300 + side);
+			::Rectangle(hdc, 300, 300, 500 + side, 500 + side);
 
 
 			// Освобожлаем ресурсы
@@ -149,20 +149,14 @@ namespace Geometry
 			//Получаем Обработчик окна
 			HWND hwnd = GetConsoleWindow();
 			hwnd = FindWindow(NULL, L"Inheritance - Microsoft Visual Studio");//Получаем контекст устройства:
-			HDC hdc = GetDC(hwnd); // Handlet=to-Device context
-			//создаем карандаш и кисть
-			HPEN hPen = CreatePen(PS_SOLID, 5, color);//Solid - сплошная , 5 - толщина линии
-			//пэн рисует контур
+			HDC hdc = GetDC(hwnd); 
+			HPEN hPen = CreatePen(PS_SOLID, 5, color);
 			HBRUSH hBrush = CreateSolidBrush(color);
-			//берем кисть и карандаш
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
 
-			//Рсиуем квадрат
 			::Rectangle(hdc, 300, 300, 300 + aSide, 300 + bSide);
 
-
-			// Освобожлаем ресурсы
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
 			ReleaseDC(hwnd, hdc);
@@ -190,6 +184,7 @@ namespace Geometry
 		}
 		void set_rad(double rad)
 		{
+			if (rad <= 0)rad = 1;
 			this->rad = rad;
 		}
 		
@@ -209,23 +204,18 @@ namespace Geometry
 		}
 		void draw()const
 		{
-			//Получаем Обработчик окна
+			
 			HWND hwnd = GetConsoleWindow();
-			hwnd = FindWindow(NULL, L"Inheritance - Microsoft Visual Studio");//Получаем контекст устройства:
-			HDC hdc = GetDC(hwnd); // Handlet=to-Device context
-			//создаем карандаш и кисть
-			HPEN hPen = CreatePen(PS_SOLID, 5, color);//Solid - сплошная , 5 - толщина линии
-			//пэн рисует контур
+			hwnd = FindWindow(NULL, L"Inheritance - Microsoft Visual Studio");
+			HDC hdc = GetDC(hwnd);
+			HPEN hPen = CreatePen(PS_SOLID, 5, color);
 			HBRUSH hBrush = CreateSolidBrush(color);
-			//берем кисть и карандаш
+			
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
 
-			//Рсиуем квадрат
-			::Ellipse(hdc, 300, 300, 300 + rad, 300 + rad);
+			::Ellipse(hdc, 300, 300, 100 + rad, 100 + rad);
 
-
-			// Освобожлаем ресурсы
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
 			ReleaseDC(hwnd, hdc);
@@ -242,8 +232,8 @@ namespace Geometry
 	class Triangle :public Shape
 	{
 		double sideAB=0;
-		double sideBC=0;
-		double angleAB=0;
+		double sideBC = 0;
+		double sideAC = 0;
 	public:
 		double get_AB()const
 		{
@@ -253,9 +243,9 @@ namespace Geometry
 		{
 			return sideBC;
 		}
-		double get_angleAB()const
+		double get_AC()const
 		{
-			return angleAB;
+			return sideAC;
 		}
 		void set_AB(double sideAB)
 		{
@@ -265,11 +255,11 @@ namespace Geometry
 		{
 			this->sideBC = sideBC;
 		}
-		void set_angleAB(double angleAB)
+		void set_AC(double sideAC)
 		{
-			this->angleAB = angleAB;
+			this->sideAC=sideAC;
 		}
-		Triangle (double sideAB, double sideBC, double angleAB,Color color) :Shape(color) {}
+		Triangle (double sideAB, double sideBC, double sideAC,Color color) :Shape(color) {}
 		
 		virtual ~Triangle() {}
 
@@ -278,63 +268,87 @@ namespace Geometry
 		virtual void draw()const = 0;
 	};
 
-	class RecTriangle :public Triangle
-	{
-	public:
-		RecTriangle(double sideAB, double sideBC, Color color, double angleAB = 90 ):Triangle(sideAB,sideBC,angleAB,color)
-		{
-			set_AB(sideAB);
-			set_BC(sideBC);
-			set_angleAB(angleAB);
-		}
-		~RecTriangle(){}
-		double get_AC()const
-		{
-			return sqrt(get_AB() * get_AB() + get_BC() * get_BC());
-		}
-		double get_area()const override
-		{
-			return 0.5 * get_AB() * get_BC() * 1; // 1 - синус угла 90 град.
-		}
-		double get_perimeter()const override
-		{
-			return  get_AB() + get_BC()+get_AC();
-		}
-		void draw()const
-		{
+	//class RecTriangle :public Triangle
+	//{
+	//public:
+	//	RecTriangle(double sideAB, double sideBC, double sideAC, Color color):Triangle(sideAB,sideBC,sideAC,color)
+	//	{
+	//		set_AB(sideAB);
+	//		set_BC(sideBC);
+	//		set_AC(sideAc);
+	//	}
+	//	~RecTriangle(){}
+	//	double get_AC()const
+	//	{
+	//		return sqrt(get_AB() * get_AB() + get_BC() * get_BC());
+	//	}
+	//	double get_area()const override
+	//	{
+	//		return 0.5 * get_AB() * get_BC() * 1; // 1 - синус угла 90 град.
+	//	}
+	//	double get_perimeter()const override
+	//	{
+	//		return  get_AB() + get_BC()+get_AC();
+	//	}
+	//	void draw()const
+	//	{
+	//		HWND hwnd = GetConsoleWindow();
+	//		hwnd = FindWindow(NULL, L"Inheritance - Microsoft Visual Studio");
+	//		HDC hdc = GetDC(hwnd);
+	//		HPEN hPen = CreatePen(PS_SOLID, 5, color);
+	//		HBRUSH hBrush = CreateSolidBrush(color);
 
-		}
-		void print()const
-		{
-			cout << "Length of AB " << get_AB() << endl;
-			cout << "Length of BC " << get_BC() << endl;
-			cout << "Length of AC " << get_AC() << endl;
-			cout << "Angle " << get_angleAB() << endl;
-			cout << "Area of rectangle triangle " << get_area() << endl;
-			cout << "Perimeter of ractangle triangle " << get_perimeter() << endl;
-			cout << delim << endl;
-		}
-		
-	};
+	//		SelectObject(hdc, hPen);
+	//		SelectObject(hdc, hBrush);
+
+	//		::Triangle(hdc, 300, 300, 300 + rad, 300 + rad);
+
+	//		DeleteObject(hBrush);
+	//		DeleteObject(hPen);
+	//		ReleaseDC(hwnd, hdc);
+	//	}
+	//	void print()const
+	//	{
+	//		cout << "Length of AB " << get_AB() << endl;
+	//		cout << "Length of BC " << get_BC() << endl;
+	//		cout << "Length of AC " << get_AC() << endl;
+	//		cout << "Angle " << get_angleAB() << endl;
+	//		cout << "Area of rectangle triangle " << get_area() << endl;
+	//		cout << "Perimeter of ractangle triangle " << get_perimeter() << endl;
+	//		cout << delim << endl;
+	//	}
+	//	
+	//};
 
 	class RightTriangle :public Triangle
 	{
 		
 	public:
-		RightTriangle(double sideAB,double sideBC, Color color, double angleAB = 60) :Triangle(sideAB,sideBC, angleAB, color)
+		RightTriangle(double sideAB,double sideBC, double sideAC, Color color) :Triangle(sideAB,sideBC, sideAC, color)
 		{
 			set_AB(sideAB);
 			set_BC(sideBC);
-			set_angleAB(angleAB);
+			set_AC(sideAC);
 		}
 		double get_area()const override 
 		{
-			return (get_AB() * get_AB() * sqrt(3)) / 4;
+			if (get_AB() == get_BC() && get_AB() == get_AC()) return (get_AB() * get_AB() * sqrt(3)) / 4;
+			else
+			{
+				cout << "Вы указали разносторонний треугольник!!!" << endl;
+				return 0;
+			}
 		}
 		double get_perimeter()const
 		{
-			return 3 * get_AB();
+			if (get_AB() == get_BC() && get_AB() == get_AC()) return 3 * get_AB();
+			else
+			{
+				cout << "Вы указали разносторонний треугольник!!!" << endl;
+				return 0;
+			}
 		}
+		
 		void draw()const
 		{
 
@@ -342,14 +356,13 @@ namespace Geometry
 		void print()const
 		{
 			cout << "Length of all sides " << get_AB() << endl;
-			cout << "Angle " << get_angleAB() << endl;
 			cout << "Area of right triangle " << get_area() << endl;
 			cout << "Perimeter of right triangle " << get_perimeter() << endl;
 			cout << delim << endl;
 		}
 	};
 
-	}
+}
 
 int main()
 {
@@ -362,9 +375,9 @@ int main()
 	////square.draw();
 
 
-	//Geometry::Rectangle rect(50,70,Geometry::Color::RED);
+	Geometry::Rectangle rect(50,70,Geometry::Color::RED);
 	//
-	////rect.draw();
+	rect.draw();
 
 	//Geometry::RecTriangle recT(30,30,90,Geometry::Color::RED);
 	//
@@ -377,15 +390,15 @@ int main()
 
 	Geometry::Shape* group[] =
 	{
-		new Geometry::Rectangle(50,70,Geometry::Color::RED),
-		new Geometry::Circle(100,Geometry::Color::BLUE),
-		new Geometry::RightTriangle(50,50,Geometry::Color::GREEN),
+		new Geometry::Rectangle(100,60,Geometry::Color::RED),
+		new Geometry::Circle(10,Geometry::Color::BLUE),
+		new Geometry::RightTriangle(50,50,50,Geometry::Color::GREEN),
 		new Geometry::Square(50,Geometry::Color::CONSOLE_RED),
-		new Geometry::RecTriangle(30,50,Geometry::Color::RED)
 	};
 	for (int i = 0; i < sizeof(group) / sizeof(Geometry::Shape*); i++)
 	{
 		group[i]->print();
+		group[i]->draw();
 	}
 
 	
