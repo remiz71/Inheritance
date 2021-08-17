@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <Windows.h>
 using namespace std;
+#define delim "----------------------------------------"
 
 namespace Geometry
 {
@@ -10,6 +11,10 @@ namespace Geometry
 		CONSOLE_RED = 0xCC,
 		CONSOLE_GREEN = 0xAA,
 		CONSOLE_BLUE = 0x99,
+
+		RED		= 0x000000FF,
+		GREEN	= 0x0000FF00,
+		BLUE	= 0x00FF0000,
 	};
 	//ENUM - (enumeration - перечисление) - набор целочисленных констант. к сожалению в 
 	// языке си++ перечисление погут хранить....Перечисление являются типом данных
@@ -34,6 +39,7 @@ namespace Geometry
 		virtual double get_area()const = 0;
 		virtual double get_perimeter()const = 0;
 		virtual void draw()const = 0;
+		virtual void print()const = 0;
 	};
 
 	class Square :public Shape
@@ -63,37 +69,26 @@ namespace Geometry
 		{
 			return side * 4;
 		}
+		void create_tools()const
+		{
+
+		}
 		void draw()const
 		{
-			//#define SIMPLEE_DRAW
-#ifdef SIMPLEE_DRAW 
-			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE); // Получаем обработчик окна консоли
-			SetConsoleTextAttribute(hConsole, get_color());//Задаем цвет текста в консоли
-			for (int i = 0; i < side; i++)
-			{
-				for (int j = 0; j < side; j++)
-				{
-					cout << "* ";
-				}
-				cout << endl;
-	}
-			SetConsoleTextAttribute(hConsole, Color::CONSOLE_DEFAULT);
-#endif // SIMPLEE_DRAW
-
 			//Получаем Обработчик окна
 			HWND hwnd = GetConsoleWindow();
 			hwnd = FindWindow(NULL, L"Inheritance - Microsoft Visual Studio");//Получаем контекст устройства:
 			HDC hdc = GetDC(hwnd); // Handlet=to-Device context
 			//создаем карандаш и кисть
-			HPEN hPen = CreatePen(PS_SOLID, 5, RGB(0, 255, 0));//Solid - сплошная , 5 - толщина линии
+			HPEN hPen = CreatePen(PS_SOLID, 5, color);//Solid - сплошная , 5 - толщина линии
 			//пэн рисует контур
-			HBRUSH hBrush = CreateSolidBrush(RGB(0, 255, 0));
+			HBRUSH hBrush = CreateSolidBrush(color);
 			//берем кисть и карандаш
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
 
 			//Рсиуем квадрат
-			Rectangle(hdc, 300, 300, 300 + side, 300 + side);
+			::Rectangle(hdc, 300, 300, 300 + side, 300 + side);
 
 
 			// Освобожлаем ресурсы
@@ -101,13 +96,259 @@ namespace Geometry
 			DeleteObject(hPen);
 			ReleaseDC(hwnd, hdc);
 
-}
+		}
+		void print()const
+		{
+			cout << "Length of side: " << get_side() << endl;
+			cout << "Area of square: " << get_area() << endl;
+			cout << "Perimeter of square: " << get_perimeter() << endl;
+			cout << delim << endl;
+		}
 };
 
 	class Rectangle :public Shape
 	{
+		double aSide;
+		double bSide;
+	public:
+		double get_aSide()const
+		{
+			return aSide;
+		}
+		double get_bSide()const
+		{
+			return bSide;
+		}
+		void set_aSide(double aSide)
+		{
+			if (aSide <= 0)aSide = 1;
+			this->aSide = aSide;
+		}
+		void set_bSide(double bSide)
+		{
+			if (bSide <= 0)bSide = 1;
+			this->bSide = bSide;
+		}
+		Rectangle(double aSide, double bSide, Color color) :Shape(color)
+		{
+			set_aSide(aSide);
+			set_bSide(bSide);
+		}
+		~Rectangle() {}
 
+		double get_area() const
+		{
+			return aSide * bSide;
+		}
+		double get_perimeter()const
+		{
+			return aSide * 2 + bSide * 2;
+		}
+		void draw()const
+		{
+			//Получаем Обработчик окна
+			HWND hwnd = GetConsoleWindow();
+			hwnd = FindWindow(NULL, L"Inheritance - Microsoft Visual Studio");//Получаем контекст устройства:
+			HDC hdc = GetDC(hwnd); // Handlet=to-Device context
+			//создаем карандаш и кисть
+			HPEN hPen = CreatePen(PS_SOLID, 5, color);//Solid - сплошная , 5 - толщина линии
+			//пэн рисует контур
+			HBRUSH hBrush = CreateSolidBrush(color);
+			//берем кисть и карандаш
+			SelectObject(hdc, hPen);
+			SelectObject(hdc, hBrush);
+
+			//Рсиуем квадрат
+			::Rectangle(hdc, 300, 300, 300 + aSide, 300 + bSide);
+
+
+			// Освобожлаем ресурсы
+			DeleteObject(hBrush);
+			DeleteObject(hPen);
+			ReleaseDC(hwnd, hdc);
+
+		}
+		void print()const
+		{
+			cout << "Length of  A side: " << get_aSide() << endl;
+			cout << "Length of  B side: " << get_bSide() << endl;
+			cout << "Area of rect: " << get_area() << endl;
+			cout << "Perimeter of rect: " << get_perimeter() << endl;
+			cout << delim << endl;
+		}
 	};
+	
+	class Circle :public Shape
+	{
+		double rad;
+	protected:
+		double PI = 3.1415926;
+	public:
+		double get_rad()const
+		{
+			return rad;
+		}
+		void set_rad(double rad)
+		{
+			this->rad = rad;
+		}
+		
+		Circle(double rad, Color color):Shape(color)
+		{
+			set_rad(rad);
+		}
+		~Circle() {}
+
+		double get_area()const
+		{
+			return PI * (rad * rad);
+		}
+		double get_perimeter()const
+		{
+			return 2 * PI * rad;
+		}
+		void draw()const
+		{
+			//Получаем Обработчик окна
+			HWND hwnd = GetConsoleWindow();
+			hwnd = FindWindow(NULL, L"Inheritance - Microsoft Visual Studio");//Получаем контекст устройства:
+			HDC hdc = GetDC(hwnd); // Handlet=to-Device context
+			//создаем карандаш и кисть
+			HPEN hPen = CreatePen(PS_SOLID, 5, color);//Solid - сплошная , 5 - толщина линии
+			//пэн рисует контур
+			HBRUSH hBrush = CreateSolidBrush(color);
+			//берем кисть и карандаш
+			SelectObject(hdc, hPen);
+			SelectObject(hdc, hBrush);
+
+			//Рсиуем квадрат
+			::Ellipse(hdc, 300, 300, 300 + rad, 300 + rad);
+
+
+			// Освобожлаем ресурсы
+			DeleteObject(hBrush);
+			DeleteObject(hPen);
+			ReleaseDC(hwnd, hdc);
+		}
+		void print()const
+		{
+			cout << "Radius of circle " << get_rad() << endl;
+			cout << "Area of circle " << get_area() << endl;
+			cout << "Perimeter of circle " << get_perimeter() << endl;
+			cout << delim << endl;
+		}
+	};
+
+	class Triangle :public Shape
+	{
+		double sideAB=0;
+		double sideBC=0;
+		double angleAB=0;
+	public:
+		double get_AB()const
+		{
+			return sideAB;
+		}
+		double get_BC()const
+		{
+			return sideBC;
+		}
+		double get_angleAB()const
+		{
+			return angleAB;
+		}
+		void set_AB(double sideAB)
+		{
+			this->sideAB = sideAB;
+		}
+		void set_BC(double sideBC)
+		{
+			this->sideBC = sideBC;
+		}
+		void set_angleAB(double angleAB)
+		{
+			this->angleAB = angleAB;
+		}
+		Triangle (double sideAB, double sideBC, double angleAB,Color color) :Shape(color) {}
+		
+		virtual ~Triangle() {}
+
+		virtual double get_area()const = 0;
+		virtual double get_perimeter()const = 0;
+		virtual void draw()const = 0;
+	};
+
+	class RecTriangle :public Triangle
+	{
+	public:
+		RecTriangle(double sideAB, double sideBC, Color color, double angleAB = 90 ):Triangle(sideAB,sideBC,angleAB,color)
+		{
+			set_AB(sideAB);
+			set_BC(sideBC);
+			set_angleAB(angleAB);
+		}
+		~RecTriangle(){}
+		double get_AC()const
+		{
+			return sqrt(get_AB() * get_AB() + get_BC() * get_BC());
+		}
+		double get_area()const override
+		{
+			return 0.5 * get_AB() * get_BC() * 1; // 1 - синус угла 90 град.
+		}
+		double get_perimeter()const override
+		{
+			return  get_AB() + get_BC()+get_AC();
+		}
+		void draw()const
+		{
+
+		}
+		void print()const
+		{
+			cout << "Length of AB " << get_AB() << endl;
+			cout << "Length of BC " << get_BC() << endl;
+			cout << "Length of AC " << get_AC() << endl;
+			cout << "Angle " << get_angleAB() << endl;
+			cout << "Area of rectangle triangle " << get_area() << endl;
+			cout << "Perimeter of ractangle triangle " << get_perimeter() << endl;
+			cout << delim << endl;
+		}
+		
+	};
+
+	class RightTriangle :public Triangle
+	{
+		
+	public:
+		RightTriangle(double sideAB,double sideBC, Color color, double angleAB = 60) :Triangle(sideAB,sideBC, angleAB, color)
+		{
+			set_AB(sideAB);
+			set_BC(sideBC);
+			set_angleAB(angleAB);
+		}
+		double get_area()const override 
+		{
+			return (get_AB() * get_AB() * sqrt(3)) / 4;
+		}
+		double get_perimeter()const
+		{
+			return 3 * get_AB();
+		}
+		void draw()const
+		{
+
+		}
+		void print()const
+		{
+			cout << "Length of all sides " << get_AB() << endl;
+			cout << "Angle " << get_angleAB() << endl;
+			cout << "Area of right triangle " << get_area() << endl;
+			cout << "Perimeter of right triangle " << get_perimeter() << endl;
+			cout << delim << endl;
+		}
+	};
+
 	}
 
 int main()
@@ -116,15 +357,37 @@ int main()
 
 	//Shape shape(Color::CONSOLE_BLUE);
 	//cout <<hex<< shape.get_color() << endl;
-	Geometry::Square square(50, Geometry::Color::CONSOLE_BLUE);
-	cout<<"Length of side: " << square.get_side() << endl;
-	cout << "Area of square: " << square.get_area() << endl;
-	cout << "Perimeter of square: " << square.get_perimeter() << endl;
-	square.draw();
+	//Geometry::Square square(50, Geometry::Color::RED);
+	//
+	////square.draw();
 
 
-	Geometry::Rectangle rect;
-	
+	//Geometry::Rectangle rect(50,70,Geometry::Color::RED);
+	//
+	////rect.draw();
+
+	//Geometry::RecTriangle recT(30,30,90,Geometry::Color::RED);
+	//
+	//
+	//Geometry::RightTriangle rightT(30,Geometry::Color::RED);
+	//
+
+	//Geometry::Circle cir(100, Geometry::Color::RED);
+	//cir.draw();
+
+	Geometry::Shape* group[] =
+	{
+		new Geometry::Rectangle(50,70,Geometry::Color::RED),
+		new Geometry::Circle(100,Geometry::Color::BLUE),
+		new Geometry::RightTriangle(50,50,Geometry::Color::GREEN),
+		new Geometry::Square(50,Geometry::Color::CONSOLE_RED),
+		new Geometry::RecTriangle(30,50,Geometry::Color::RED)
+	};
+	for (int i = 0; i < sizeof(group) / sizeof(Geometry::Shape*); i++)
+	{
+		group[i]->print();
+	}
+
 	
 	return 0;
 }
