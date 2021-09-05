@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <Windows.h>
+#include <math.h>
 using namespace std;
 #define delim "----------------------------------------"
 
@@ -291,8 +292,8 @@ namespace Geometry
 			unsigned int startY = 400;
 			POINT points[] =
 			{
-				{startX,startY+side},
-				{startX + side,startY+side},
+				{startX,startY + side},
+				{startX + side,startY + side},
 				{startX + side / 2, startY}
 			};
 
@@ -306,6 +307,87 @@ namespace Geometry
 			ReleaseDC(hwnd, hdc);
 		}
 
+	};
+
+	class IsoscelesTriangle : public Triangle
+	{
+		double side;
+		double base;
+	public:
+		double get_side() const
+		{
+			return side;
+		}
+		double get_base() const
+		{
+			return base;
+		}
+		double set_side(double side)
+		{
+			if (side <= 0)side = 1;
+			this->side = side;
+			return this->side;
+		}
+		double set_base(double base)
+		{
+			if (base <= 0)base = 1;
+			this->base = base;
+			return this->base;
+		}
+		IsoscelesTriangle(double side, double base, Color color) : Triangle(color)
+		{
+			set_side(side);
+			set_base(base);
+		}
+		~IsoscelesTriangle() {}
+		double getHeight() const
+		{
+			double a = sqrt(((side * side) - ((base * base)/4)));
+			return a;
+		}
+		double get_area() const
+		{
+			return getHeight() * base * 0.5;
+		}
+		double get_perimeter() const
+		{
+			return 2 * side + base;
+		}
+		void draw()const
+		{
+			HWND hwnd = GetDesktopWindow();
+			hwnd = FindWindow(NULL, L"Inheritance - Microsoft Visual Studio");
+			HDC hdc = GetDC(hwnd);
+
+			HPEN h_pen = CreatePen(PS_SOLID, 5, color);
+			HBRUSH h_brush = CreateSolidBrush(color);
+
+			SelectObject(hdc, h_pen);
+			SelectObject(hdc, h_brush);
+
+			unsigned int start_x = 600;
+			unsigned int start_y = 400;
+
+			POINT points[]
+			{
+			  {start_x + base, start_y},
+			  {start_x + base, start_y + side},
+			  {start_x , start_y + side / 2}
+			};
+
+			Polygon(hdc, points, sizeof(points) / sizeof(POINT));
+			DeleteObject(h_brush);
+			DeleteObject(h_pen);
+
+			ReleaseDC(hwnd, hdc);
+
+		}
+		void print()const
+		{
+			cout << "Длина равнобедренного треугольника: " << get_side() << endl;
+			cout << "Площадь равнобедренного треугольника: " << get_area() << endl;
+			cout << "Периметр  равнобедренного треугольника: " << get_perimeter() << endl;
+		}
 	};
 }
 
@@ -489,7 +571,8 @@ int main()
 		new Geometry::Rectangle(200,150,Geometry::Color::RED),
 		new Geometry::Circle(10,Geometry::Color::BLUE),
 		new Geometry::Square(50,Geometry::Color::CONSOLE_RED),
-		new Geometry::EquilaterialTriangle(300,Geometry::Color::GREEN)
+		new Geometry::EquilaterialTriangle(300,Geometry::Color::GREEN),
+		new Geometry::IsoscelesTriangle(5,3,Geometry::Color::RED)
 	};
 	for (int i = 0; i < sizeof(group) / sizeof(Geometry::Shape*); i++)
 	{
